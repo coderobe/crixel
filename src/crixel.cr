@@ -103,6 +103,7 @@ module Crixel
         end
 
         lines.each.with_index do |line, index|
+          line = line.chars.chunk { |e| e }.map { |chunk| ['!', chunk.last.size, chunk.first] }.flatten.join("") # RLE
           color = colors[index]
           pindex = palette.index color
           if pindex.nil? # color undefined
