@@ -88,7 +88,7 @@ module Crixel
 
       @sixbuf.each_slice(@width) do |sixline|
         colors = [] of UInt32
-        lines = [] of String
+        lines = [""]
         sixline.each do |sixel|
           sixels = split_sixel(sixel)
           sixels.each.with_index do |sx, i|
@@ -97,8 +97,18 @@ module Crixel
               color = colors.size
               colors << sx.color
             end
-            lines << "" if lines.size < colors.size
-            lines[color] += sx.to_char
+            if lines.size < colors.size
+              lines << 63.chr.to_s*lines.first.size
+            end
+            lines = lines.map_with_index do |line, id|
+              if id == color
+                line + sx.to_char
+              elsif line.size < lines.max_by { |a| a.size }.size
+                line + 63.chr
+              else
+                line
+              end
+            end
           end
         end
 
