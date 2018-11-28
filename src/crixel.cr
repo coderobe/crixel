@@ -78,6 +78,7 @@ module Crixel
 
     def render(io = STDOUT)
       frame = ""
+      frame_palette = ""
       palette = [] of UInt32
 
       @sixbuf.each_slice(@width) do |sixline|
@@ -106,6 +107,7 @@ module Crixel
           end
         end
 
+        frame_line = ""
         lines.each.with_index do |line, index|
           line = line.chars.chunk { |e| e }.map { |chunk| ['!', chunk.last.size, chunk.first] }.flatten.join("") # RLE
           color = colors[index]
@@ -113,17 +115,15 @@ module Crixel
           if pindex.nil? # color undefined
             pindex = palette.size
             palette.push color
-            frame += "##{pindex};2;#{(color >> 16 & 0xFF).to_u8};#{(color >> 8 & 0xFF).to_u8};#{(color & 0xFF).to_u8}"
-          else
-            frame += "##{pindex}"
+            frame_palette += "##{pindex};2;#{((color >> 16 & 0xFF) / 2.56).to_u8};#{((color >> 8 & 0xFF) / 2.56).to_u8};#{((color & 0xFF) / 2.56).to_u8}"
           end
-          frame += "#{line}$"
+          frame_line += "##{pindex}#{line}$"
         end
 
-        frame += '-'
+        frame += frame_line + '-'
       end
 
-      io.write frame.to_slice
+      io.write (frame_palette + frame).to_slice
     end
   end
 end
