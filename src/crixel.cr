@@ -19,10 +19,7 @@ module Crixel
   class Sixel
     property squots
 
-    def initialize(@squots = Array(Squot).new(6, Squot.new))
-      @squots.size.times do |t|
-        @squots[t - 1] = Squot.new
-      end
+    def initialize(@squots = Array(Squot).new(6) { Squot.new })
     end
 
     def set(y, color : UInt32)
@@ -47,13 +44,10 @@ module Crixel
   end
 
   class Image
-    property sixbuf
+    property sixbuf : Array(Sixel)
 
     def initialize(@width : UInt32, @height : UInt32)
-      @sixbuf = Array(Sixel).new((@width * (@height.to_f / 6).ceil).to_u32, Sixel.new)
-      @sixbuf.size.times do |t|
-        @sixbuf[t - 1] = Sixel.new
-      end
+      @sixbuf = Array(Sixel).new((@width * (@height.to_f / 6).ceil).to_u32) { Sixel.new }
     end
 
     def set(x, y, color : UInt32)
