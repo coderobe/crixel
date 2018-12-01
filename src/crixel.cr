@@ -97,8 +97,6 @@ module Crixel
       @pixels.each_slice(@width*6).with_index do |sixrow, sindex|
         # in sixel row
         lastcolor = nil
-        lastchar = nil
-        lastchar_count = 0
         @width.times do |x|
           # in sixel col of row
           6.times do |ct|
