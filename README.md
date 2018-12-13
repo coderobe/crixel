@@ -16,9 +16,18 @@ dependencies:
 
 ```crystal
 require "crixel"
-```
 
-TODO: Write usage instructions here
+# create a canvas
+width = 5 # px
+height = 5 # px
+img = SixelImage.new(width, height)
+
+# change pixel color at x, y coords
+img.set(3, 3, 0xFF0000_u32)
+
+# draw
+img.render_naive_full
+```
 
 ## Development
 
